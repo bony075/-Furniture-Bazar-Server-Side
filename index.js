@@ -18,11 +18,12 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() { 
     try { 
 const productCollection = client.db('hotSale').collection('productCollection');
+const categoryCollection = client.db('hotSale').collection('categoryCollection');
 
-app.get('/productCollection', async (req, res) => {
+app.get('/categoryCollection', async (req, res) => {
 
 const query={};
-const options= await productCollection.find(query).toArray();
+const options= await categoryCollection.find(query).toArray();
 res.send(options);
 
 
@@ -46,7 +47,7 @@ app.get('/', (req, res) => {
     res.send('resell server response');
 });
 
-app.get('/sale-category', (req, res) => {
+app.get('/categoryCollection', (req, res) => {
     res.send();
 });
 
