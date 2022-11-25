@@ -15,25 +15,29 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-async function run() { 
-    try { 
-const productCollection = client.db('hotSale').collection('productCollection');
-const categoryCollection = client.db('hotSale').collection('categoryCollection');
+async function run() {
+    try {
+        const productCollection = client.db('hotSale').collection('productCollection');
+        const categoryCollection = client.db('hotSale').collection('categoryCollection');
 
-app.get('/categoryCollection', async (req, res) => {
+        app.get('/categoryCollection', async (req, res) => {
 
-const query={};
-const options= await categoryCollection.find(query).toArray();
-res.send(options);
+            const query = {};
+            const options = await categoryCollection.find(query).toArray();
+            res.send(options);
+        });
 
+        app.get('/category/:id',async (req, res) => {
+            const id = req.params.id;
+            // const query = { };
+            const category_product = await productCollection.find({}, { category_id: id }).toArray();
+            res.send(category_product);
 
-});
-
-
+        })
 
 
     }
-    finally{
+    finally {
 
     }
 }
