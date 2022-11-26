@@ -19,6 +19,7 @@ async function run() {
     try {
         const productCollection = client.db('hotSale').collection('productCollection');
         const categoryCollection = client.db('hotSale').collection('categoryCollection');
+        const userCollection = client.db('hotSale').collection('userCollection');
 
         app.get('/categoryCollection', async (req, res) => {
 
@@ -33,11 +34,18 @@ async function run() {
           const category_product = await productCollection.find(query).toArray();
           res.send(category_product);
         })
-        app.get('/product',async (req, res) => {
-          const query = {};
-          const product = await productCollection.find(query).toArray();
-          res.send(product);
-        })
+        app.get('/product', async (req, res) => {
+            const query = {};
+            const product = await productCollection.find(query).toArray();
+            res.send(product);
+        });
+
+
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await userCollection.insertOne(user);
+            res.send(result);
+         })
 
 
     }
