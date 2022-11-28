@@ -38,80 +38,98 @@ function verifyJWT(req, res, next) {
 
 
 async function run() {
-    try {
-        const productCollection = client.db('hotSale').collection('productCollection');
-        const categoryCollection = client.db('hotSale').collection('categoryCollection');
-        const userCollection = client.db('hotSale').collection('userCollection');
-        const bookProductCollection = client.db('hotSale').collection('bookProductCollection');
+  try {
+    const productCollection = client.db('hotSale').collection('productCollection');
+    const categoryCollection = client.db('hotSale').collection('categoryCollection');
+    const userCollection = client.db('hotSale').collection('userCollection');
+    const bookProductCollection = client.db('hotSale').collection('bookProductCollection');
 
-        app.get('/categoryCollection', async (req, res) => {
+    app.get('/categoryCollection', async (req, res) => {
 
-            const query = {};
-            const options = await categoryCollection.find(query).toArray();
-            res.send(options);
-        });
+      const query = {};
+      const options = await categoryCollection.find(query).toArray();
+      res.send(options);
+    });
 
-        app.get('/category/:id',async (req, res) => {
-          const id = req.params.id;
-          const query = {  category_id: id};
-          const category_product = await productCollection.find(query).toArray();
-          res.send(category_product);
-        })
-        app.get('/product', async (req, res) => {
-            const query = {};
-            const product = await productCollection.find(query).toArray();
-            res.send(product);
-        });
-
-
-        app.get('/jwt', async (req, res) => {
-            const email = req.query.email;
-            const query = { email: email };
-            const user = await userCollection.findOne(query);
-            if (user) {
-                const token = jwt.sign({ email }, process.env.ACCESS_TOKEN, { expiresIn: '5d' })
-                return res.send({ accessToken: token });
-            }
-            res.status(403).send({ accessToken: '' })
-        });
+    app.get('/category/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { category_id: id };
+      const category_product = await productCollection.find(query).toArray();
+      res.send(category_product);
+    })
+    app.get('/product', async (req, res) => {
+      const query = {};
+      const product = await productCollection.find(query).toArray();
+      res.send(product);
+    });
 
 
-
-        app.post('/users', async (req, res) => {
-            const user = req.body;
-            const result = await userCollection.insertOne(user);
-            res.send(result);
-         })
-
-        
-        app.get("/bookedProduct", verifyJWT, async (req, res) => {
-          const email = req.query.email;
-          const decodedEmail = req.decoded.email;
-          if (email !== decodedEmail) {
-            return res.status(403).send({ message: "forbidden access" });
-          }
-
-          const query = { email: email };
-          const bookings = await bookProductCollection.find(query).toArray();
-          res.send(bookings);
-        });
-        
-        
-        app.post('/bookedProduct', async (req, res) => {
-            const product = req.body;
-            const result = await bookProductCollection.insertOne(product);
-            res.send(result);
-         })
+    app.get('/jwt', async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const user = await userCollection.findOne(query);
+      if (user) {
+        const token = jwt.sign({ email }, process.env.ACCESS_TOKEN, { expiresIn: '5d' })
+        return res.send({ accessToken: token });
+      }
+      res.status(403).send({ accessToken: '' })
+    });
 
 
 
+    app.post('/users', async (req, res) => {
+      const user = req.body;
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    })
 
 
-        
-    }
-    finally {
+    app.get("/bookedProduct", verifyJWT, async (req, res) => {
+      const email = req.query.email;
+      const decodedEmail = req.decoded.email;
+      if (email !== decodedEmail) {
+        return res.status(403).send({ message: "forbidden access" });
+      }
 
-    }
+      const query = { email: email };
+      const bookings = await bookProductCollection.find(query).toArray();
+      res.send(bookings);
+    });
+
+
+    app.post('/bookedProduct', async (req, res) => {
+      const product = req.body;
+      const result = await bookProductCollection.insertOne(product);
+      res.send(result);
+    })
+
+    app.get('/users', async (req, res) => {
+      const query = {};
+      const users = await userCollection.find(query).toArray();
+      res.send(users);
+    });
+    app.get('/allbuyer', async (req, res) => {
+
+      const query = { usertype: 'buyer' };
+      // console.log('usdaas',usertype);
+      const users = await userCollection.find(query).toArray();
+      res.send(users);
+    });
+ 
+    app.get('/allSeller', async (req, res) => {
+
+      const query = { usertype: 'seller' };
+   
+      const users = await userCollection.find(query).toArray();
+      res.send(users);
+    });
+ 
+
+
+  }
+  finally {
+
+  }
 }
 run().catch(console.log);
 
@@ -120,11 +138,11 @@ run().catch(console.log);
 
 
 app.get('/', (req, res) => {
-    res.send('resell server response');
+  res.send('resell server response');
 });
 
 app.get('/categoryCollection', (req, res) => {
-    res.send();
+  res.send();
 });
 
 
