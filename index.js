@@ -63,6 +63,21 @@ async function run() {
             res.send(result);
          })
 
+        
+        app.get("/bookedProduct", async (req, res) => {
+          const email = req.query.email;
+        //   const decodedEmail = req.decoded.email;
+
+        //   if (email !== decodedEmail) {
+        //     return res.status(403).send({ message: "forbidden access" });
+        //   }
+
+          const query = { email: email };
+          const bookings = await bookProductCollection.find(query).toArray();
+          res.send(bookings);
+        });
+        
+        
         app.post('/bookedProduct', async (req, res) => {
             const product = req.body;
             const result = await bookProductCollection.insertOne(product);
@@ -70,6 +85,10 @@ async function run() {
          })
 
 
+
+
+
+        
     }
     finally {
 
