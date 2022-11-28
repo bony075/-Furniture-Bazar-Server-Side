@@ -84,12 +84,12 @@ async function run() {
     })
 
 
-    app.get("/bookedProduct", verifyJWT, async (req, res) => {
+    app.get("/bookedProduct", async (req, res) => {
       const email = req.query.email;
-      const decodedEmail = req.decoded.email;
-      if (email !== decodedEmail) {
-        return res.status(403).send({ message: "forbidden access" });
-      }
+      // const decodedEmail = req.decoded.email;
+      // if (email !== decodedEmail) {
+      //   return res.status(403).send({ message: "forbidden access" });
+      // }
 
       const query = { email: email };
       const bookings = await bookProductCollection.find(query).toArray();
@@ -124,6 +124,41 @@ async function run() {
       res.send(users);
     });
  
+    app.get('/users/admin/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { email }
+      const user = await userCollection.findOne(query);
+      res.send({ isAdmin: user?.usertype === 'admin' });
+    })
+
+    // app.get('/users/verify/:email', async (req, res) => {
+    //   const email = req.params.email;
+    //   const query = { email }
+    //   const user = await userCollection.findOne(query);
+    //   res.send({ isAdmin: user?.usertype === 'verify' });
+    // });
+
+
+    // app.put('/users/verify/:id', async (req, res) => {
+    //   // const decodedEmail = req.decoded.email;
+    //   // const query = { email: decodedEmail };
+    //   const user = await userCollection.findOne(query);
+
+    //   // if (user?.usertype !== 'verify') {
+    //   //   return res.status(403).send({ message: 'forbidden access' })
+    //   // }
+
+    //   const id = req.params.id;
+    //   const filter = { _id: ObjectId(id) }
+    //   const options = { upsert: true };
+    //   const updatedDoc = {
+    //     $set: {
+    //       usertype: 'verify'
+    //     }
+    //   }
+    //   const result = await userCollection.updateOne(filter, updatedDoc, options);
+    //   res.send(result);
+    // })
 
 
   }
