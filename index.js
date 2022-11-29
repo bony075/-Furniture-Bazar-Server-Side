@@ -57,12 +57,27 @@ async function run() {
       const category_product = await productCollection.find(query).toArray();
       res.send(category_product);
     })
+
+  // app.get("/productcategory", async (req, res) => {
+  //   const query = {};
+  //   const result = await categoryCollection
+  //     .find(query)
+  //     .project({ name: 1 })
+  //     .toArray();
+  //   res.send(result);
+  // });
+
+
     app.get('/product', async (req, res) => {
       const query = {};
       const product = await productCollection.find(query).toArray();
       res.send(product);
     });
-
+ app.post("/product", async (req, res) => {
+   const product = req.body;
+   const result = await productCollection.insertOne(product);
+   res.send(result);
+ });
 
     app.get('/jwt', async (req, res) => {
       const email = req.query.email;
