@@ -110,6 +110,17 @@ async function run() {
       const bookings = await bookProductCollection.find(query).toArray();
       res.send(bookings);
     });
+    app.get("/myProduct", async (req, res) => {
+      const seller = req.query.seller;
+      // const decodedEmail = req.decoded.email;
+      // if (email !== decodedEmail) {
+      //   return res.status(403).send({ message: "forbidden access" });
+      // }
+
+      const query = { seller: seller };
+      const myProduct = await productCollection.find(query).toArray();
+      res.send(myProduct);
+    });
 
 
     app.post('/bookedProduct', async (req, res) => {
@@ -143,7 +154,7 @@ async function run() {
       const email = req.params.email;
       const query = { email }
       const user = await userCollection.findOne(query);
-      res.send({ isAdmin: user?.usertype === 'admin' });
+      res.send({ isAdmin: user?.usertype  });
     })
 
     // app.get('/users/verify/:email', async (req, res) => {
