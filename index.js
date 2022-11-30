@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
@@ -95,6 +95,12 @@ async function run() {
     app.post('/users', async (req, res) => {
       const user = req.body;
       const result = await userCollection.insertOne(user);
+      res.send(result);
+    })
+    app.delete('/users/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id)  };
+      const result = await userCollection.deleteOne(filter);
       res.send(result);
     })
 
